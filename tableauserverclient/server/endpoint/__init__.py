@@ -23,5 +23,6 @@ from .tables_endpoint import Tables
 from .tasks_endpoint import Tasks
 from .users_endpoint import Users
 from .views_endpoint import Views
+from .virtualconnections_endpoint import VirtualConnections
 from .webhooks_endpoint import Webhooks
 from .workbooks_endpoint import Workbooks

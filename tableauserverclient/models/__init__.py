@@ -38,5 +38,6 @@ from .target import Target
 from .task_item import TaskItem
 from .user_item import UserItem
 from .view_item import ViewItem
+from .virtualconnection_item import VirtualConnectionItem
 from .webhook_item import WebhookItem
 from .workbook_item import WorkbookItem
