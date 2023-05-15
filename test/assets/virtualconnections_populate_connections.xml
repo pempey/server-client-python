@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<tsResponse xmlns="http://tableau.com/api" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://tableau.com/api https://help.tableau.com/samples/en-us/rest_api/ts-api_3_18.xsd">
+    <pagination pageNumber="1" pageSize="100" totalAvailable="2" />
+    <virtualConnectionConnections>
+      <connections>
+          <connection connectionId="be786ae0-d2bf-4a4b-9b34-e2de8d2d4488" server="forty-two.net" username="duo" dbClass="sqlserver" serverPort="0"/>
+          <connection connectionId="970e24bc-e200-4841-a3e9-66e7d122d77e" server="database.com" username="heero" dbClass="snowflake" serverPort="1" />
+      </connections>
+    </virtualConnectionConnections>
+</tsResponse>

@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<tsResponse xmlns="http://tableau.com/api" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://tableau.com/api https://help.tableau.com/samples/en-us/rest_api/ts-api_3_18.xsd">
+    <pagination pageNumber="1" pageSize="100" totalAvailable="2" />
+    <virtualConnections>
+        <virtualConnection id="e76a1461-3b1d-4588-bf1b-17551a879ad9" name="SampleVC" createdAt="2016-08-11T21:22:40Z" updatedAt="2016-08-11T21:34:17Z" hasExtracts="true" isCertified="true" webpageUrl="https://web.com">
+        </virtualConnection>
+        <virtualConnection id="9dbd2263-16b5-46e1-9c43-a76bb8ab65fb" name="Sample virtualconnection" createdAt="2016-08-04T21:31:55Z" updatedAt="2016-08-04T21:31:55Z" hasExtracts="true" isCertified="false"  webpageUrl="https://page.com">
+        </virtualConnection>
+    </virtualConnections>
+</tsResponse>

@@ -1,6 +1,6 @@
 import xml.etree.ElementTree as ET
 from datetime import datetime
-from typing import List, Optional, Set
+from typing import List, Optional, Set, TYPE_CHECKING
 
 from tableauserverclient.datetime_helpers import parse_datetime
 from .connection_item import ConnectionItem
@@ -9,6 +9,9 @@ from .property_decorators import (
     property_not_nullable,
     property_is_boolean,
 )
+
+if TYPE_CHECKING:
+    from tableauserverclient.server import Pager
 
 class VirtualConnectionItem(object):
     def __init__(self, name: Optional[str] = None):
@@ -38,7 +41,7 @@ class VirtualConnectionItem(object):
         self._certified = value
 
     @property
-    def connections(self) -> Optional[List[ConnectionItem]]:
+    def connections(self) -> "Pager": # Optional[List[ConnectionItem]]:
         if self._connections is None:
             error = "Virtual Connection item must be populated with connections first."
             raise UnpopulatedPropertyError(error)
@@ -51,9 +54,16 @@ class VirtualConnectionItem(object):
             raise UnpopulatedPropertyError(error)
         return self._data_quality_warnings()
 
+    
     @property
     def has_extracts(self) -> Optional[bool]:
         return self._has_extracts
+    
+    @has_extracts.setter
+    @property_not_nullable
+    @property_is_boolean
+    def has_extracts(self, value: Optional[bool]):
+        self._has_extracts = value
 
     @property
     def id(self) -> Optional[str]:
@@ -97,9 +107,9 @@ class VirtualConnectionItem(object):
     @classmethod
     def from_xml(cls, virtualconnection_xml, ns):
         virtualconnection_item = cls()
-        virtualconnection_item._certified = str(virtualconnection_xml.get("isCertified", None)).lower() == "true"
+        virtualconnection_item._certified = str(virtualconnection_xml.get("isCertified", None)).lower()
         virtualconnection_item._created_at = parse_datetime(virtualconnection_xml.get("createdAt", None))
-        virtualconnection_item._has_extracts = virtualconnection_xml.get("hasExtracts", None)
+        virtualconnection_item._has_extracts = str(virtualconnection_xml.get("hasExtracts", None)).lower()
         virtualconnection_item._id = virtualconnection_xml.get("id", None)
         virtualconnection_item._name = virtualconnection_xml.get("name", None)   
         virtualconnection_item._updated_at = parse_datetime(virtualconnection_xml.get("updatedAt", None))  

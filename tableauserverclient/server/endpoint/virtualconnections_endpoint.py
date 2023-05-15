@@ -3,6 +3,7 @@ from .exceptions import MissingRequiredFieldError
 from .dqw_endpoint import _DataQualityWarningEndpoint
 from tableauserverclient.server import RequestFactory
 from tableauserverclient.models import VirtualConnectionItem, PaginationItem, ConnectionItem
+from ..pager import Pager
 
 import logging
 
@@ -35,24 +36,34 @@ class VirtualConnections(QuerysetEndpoint):
         all_metric_items = VirtualConnectionItem.from_response(server_response.content, self.parent_srv.namespace)
         return all_metric_items, pagination_item
     
+    
+    
     # Populate virtual connection item's connections
     @api(version="3.18")
-    def populate_connections(self, virtualconnection_item: VirtualConnectionItem) -> None:
+    def populate_connections(self, virtualconnection_item, req_options: Optional["RequestOptions"] = None) -> None:
         if not virtualconnection_item.id:
-            error = "Virtual Connection item missing ID. Datasource must be retrieved from server first."
+            error = "Virtual Connection item missing ID. Virtual Connection must be retrieved from server first."
             raise MissingRequiredFieldError(error)
 
-        def connections_fetcher():
-            return self._get_virtualconnection_connections(virtualconnection_item)
+        # Define an inner function that we bind to the model_item's `.connections` property.
 
-        virtualconnection_item._set_connections(connections_fetcher)
-        logger.info("Populated connections for virtualconnection (ID: {0})".format(virtualconnection_item.id))
+        def connection_pager():
+            return Pager(
+                lambda options: self._get_connections_for_virtualconnection(virtualconnection_item, options),
+                req_options,
+            )
 
-    def _get_virtualconnection_connections(self, virtualconnection_item, req_options=None):
+        virtualconnection_item._set_connections(connection_pager)
+    
+    def _get_connections_for_virtualconnection(
+        self, virtualconnection_item, req_options: Optional["RequestOptions"] = None
+    ) -> Tuple[List[ConnectionItem], PaginationItem]:
         url = "{0}/{1}/connections".format(self.baseurl, virtualconnection_item.id)
         server_response = self.get_request(url, req_options)
         connections = ConnectionItem.from_response(server_response.content, self.parent_srv.namespace)
-        return connections
+        pagination_item = PaginationItem.from_response(server_response.content, self.parent_srv.namespace)
+        logger.info("Populated connections for virtualconnection (ID: {0})".format(virtualconnection_item.id))
+        return connections, pagination_item
     
     # Update virtual connection connections
     @api(version="3.18")

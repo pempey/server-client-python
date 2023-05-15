@@ -63,6 +63,7 @@ class ConnectionItem(object):
         all_connection_items = list()
         parsed_response = fromstring(resp)
         all_connection_xml = parsed_response.findall(".//t:connection", namespaces=ns)
+        virtualconnection_connection_element = parsed_response.find(".//t:virtualConnectionConnections", namespaces=ns)
         for connection_xml in all_connection_xml:
             connection_item = cls()
             connection_item._id = connection_xml.get("id", None)
@@ -76,6 +77,12 @@ class ConnectionItem(object):
             if datasource_elem is not None:
                 connection_item._datasource_id = datasource_elem.get("id", None)
                 connection_item._datasource_name = datasource_elem.get("name", None)
+            # Many of the object names in a Virtual Connection connection are different from the standard Datasource and Workbook names.
+            if virtualconnection_connection_element is not None:
+                connection_item._id = connection_xml.get("connectionId", None)
+                connection_item.server_address = connection_xml.get("server", None)
+                connection_item._connection_type = connection_xml.get("dbClass", None)
+                connection_item.username = connection_xml.get("username", None)
             all_connection_items.append(connection_item)
         return all_connection_items
 
