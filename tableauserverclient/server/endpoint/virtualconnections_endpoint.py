@@ -48,10 +48,10 @@ class VirtualConnections(QuerysetEndpoint):
         # Define an inner function that we bind to the model_item's `.connections` property.
 
         def connection_pager():
-            return Pager(
+            return list(Pager(
                 lambda options: self._get_connections_for_virtualconnection(virtualconnection_item, options),
                 req_options,
-            )
+            ))
 
         virtualconnection_item._set_connections(connection_pager)
     

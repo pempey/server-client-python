@@ -41,7 +41,7 @@ class VirtualConnectionItem(object):
         self._certified = value
 
     @property
-    def connections(self) -> "Pager": # Optional[List[ConnectionItem]]:
+    def connections(self) -> Optional[List[ConnectionItem]]: # "Pager": # 
         if self._connections is None:
             error = "Virtual Connection item must be populated with connections first."
             raise UnpopulatedPropertyError(error)
